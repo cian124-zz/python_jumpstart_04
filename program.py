@@ -1,45 +1,47 @@
-import datetime
+import journal
 
 
 def print_title():
-    print("-------------------------")
-    print("      BIRTHDAY APP")
-    print("-------------------------")
+    print("--------------------------")
+    print("   PERSONAL JOURNAL APP")
+    print("--------------------------")
     print("")
 
 
-def get_dob():
-    year = input("What year were you born [YYYY]?")
-    month = input("What month were you born [MM]?")
-    day = input("What day were you born [DD]?")
-    dob = datetime.date(int(year), int(month), int(day))
-    return dob
+def main_loop():
+    username = input("What's your name?")
+    jnal = journal.load(username)
+    user_input = 'q'
+
+    while user_input != 'x' and user_input:
+        user_input = input("What do you want to do? [L]ist, [A]dd or E[x]it?")
+        user_input = user_input.lower()
+        if user_input == 'l':
+            list_entries(jnal)
+        elif user_input == 'a':
+            add_entry(jnal)
+        elif user_input != 'x' and user_input:
+            print("Invalid entry")
+
+    journal.save(username, jnal)
+    return
 
 
-def calculate_birthday(dob, today):
-    bday = datetime.date(today.year, dob.month, dob.day)
-
-    time_until_bday = today - bday
-
-    return time_until_bday.days
+def add_entry(jnal):
+    entry = input("Enter your journal entry:\n")
+    journal.add_entry(entry, jnal)
+    return
 
 
-def print_birthday(time_until_bday, dob):
-    print("It looks like you were born on {}".format(str(dob)))
-    if time_until_bday < 0:
-        print("Looks like your birthday is in {} days!".format(time_until_bday))
-    elif time_until_bday > 0:
-        print("Looks like your birthday was {} days ago!".format(time_until_bday))
-    else:
-        print("Happy Birthday!!!")
+def list_entries(jnal):
+    for entry in jnal:
+        print(entry)
+    return
 
 
 def main():
     print_title()
-    dob = get_dob()
-    today = datetime.date.today()
-    time_until_bday = calculate_birthday(dob, today)
-    print_birthday(time_until_bday, dob)
+    main_loop()
 
 
 if __name__ == "__main__":
